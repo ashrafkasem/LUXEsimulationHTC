@@ -36,7 +36,7 @@ def doEvtLoop(inputfiles,maxEvt=-1):
     event = reader.get("events")
 
     columns=["event","hit_id","particle_id","h_CellID","h_EDep","h_Time","h_PathLength",
-            "h_Quality","h_isOverlay","h_x","h_y","h_z","h_px","h_py","h_pz",
+            "h_Quality","h_isOverlay","h_x","h_y","h_z","h_px","h_py","h_pz","isProducedBySecondary",
             "p_PDG","p_Energy","p_Charge","p_Time","p_Mass","p_vx","p_vy","p_vz",
             "p_end_vx","p_end_vy","p_end_vz","p_px","p_py","p_pz","p_end_px",
             "p_end_py","p_end_pz","p_spin_x","p_spin_y","p_spin_z","p_isOverlay","p_isStopped",
@@ -78,6 +78,7 @@ def doEvtLoop(inputfiles,maxEvt=-1):
                                      SiH.getMomentum()[0],
                                      SiH.getMomentum()[1],
                                      SiH.getMomentum()[2],
+                                     SiH.isProducedBySecondary(),
                                      SiH.getMCParticle().getPDG(),
                                      SiH.getMCParticle().getEnergy(),
                                      SiH.getMCParticle().getCharge(),
@@ -114,6 +115,8 @@ def doEvtLoop(inputfiles,maxEvt=-1):
 def main(outdir, inputfile):
     
     df = doEvtLoop(inputfile)
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     df.to_pickle(f"{outdir}/{inputfile.split('/')[-1].replace('.root', '.tar.gz')}")
     
 if __name__ == "__main__":
